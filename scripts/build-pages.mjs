@@ -1,0 +1,244 @@
+// build-pages.mjs
+// Static-site generator for the interior pages of the dubaipipes.com redesign.
+// Wraps a per-page <main> fragment (in src-pages/<slug>.html) with the shared
+// <head> + header + mobile nav + CTA band + footer + scripts (the "chrome").
+//
+// The home page (public/index.html) is hand-authored and NOT regenerated.
+// The contact page (public/contact-us/index.html) is hand-authored (map + form)
+// and NOT regenerated. Everything else is generated here.
+//
+// Usage:  node scripts/build-pages.mjs
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+const SRC = join(ROOT, 'src-pages');
+const OUT = join(ROOT, 'public');
+
+const FAVICON = '/assets/images/logo.gif';
+const DEFAULT_OG = '/assets/images/home/ccfb5d9d36.jpg';
+
+const PAGES = [
+  {
+    slug: 'certifications-approvals',
+    title: 'Certifications & Approvals - Dubai Pipes Factory Co.',
+    desc: 'DPFC is ISO 9001:2008 and ISO 14001 accredited, WRAS approved, and holds BSI Kitemark licenses for ASTM D3262, D3517, D3754, BS 5480, BS EN 1796 and BS EN 14364.',
+    jsonld: { '@type': 'Organization', name: 'Dubai Pipes Factory Co.', url: 'https://dubaipipes.com/certifications-approvals/' },
+  },
+  {
+    slug: 'grp-pipe-installation',
+    title: 'GRP Pipe Installation - Dubai Pipes Factory Co.',
+    desc: 'GRP pipes install above ground with self-restrained joints (hand lay-up lamination) or underground with double-bell Reka couplings - by open trench, micro-tunneling or jacking.',
+  },
+  {
+    slug: 'grp-pipes-benefits',
+    title: 'GRP Pipes Benefits & Applications - Dubai Pipes Factory Co.',
+    desc: 'Ten advantages of GRP pipes - light weight, corrosion resistance, smooth bore, low maintenance, long 12 m sections - and the full range of water, sewerage and industrial applications.',
+  },
+  {
+    slug: 'grp-pipes-general-information',
+    title: 'GRP Pipes General Information - Raw Material & Production Process',
+    desc: 'Definition, raw materials (glass fibre, thermoset resins), the continuous filament and reciprocal helical winding processes, product range, fittings and manhole liners - from Dubai Pipes Factory Co.',
+    jsonld: { '@type': 'TechArticle', headline: 'GRP Pipes General Information', about: 'Glass Reinforced Plastic pipes' },
+    dataScripts: ['/assets/js/products-data.js'],
+  },
+  {
+    slug: 'know-how-supplier',
+    title: 'Know-How Supplier - Flowtite® Technology - Dubai Pipes Factory Co.',
+    desc: 'Dubai Pipes Factory Co. produces large-diameter GRP pipes under know-how and technology from Flowtite Technology AS - and is the only company in the UAE authorized to produce Flowtite® pipes.',
+  },
+  {
+    slug: 'product-testing',
+    title: 'Product Testing & Material Specifications - Dubai Pipes Factory Co.',
+    desc: 'Inspection and test plan from incoming raw material to finished pipe, long-term qualification tests (ASTM D3681, D2992, D5365), and conformance to ASTM, BS EN and AWWA standards.',
+  },
+  {
+    slug: 'download-catalog',
+    title: 'Download Catalog - Dubai Pipes Factory Co.',
+    desc: 'Download the Dubai Pipes Factory Co. GRP product catalog (PDF) and the plant location map.',
+  },
+  {
+    slug: 'services',
+    title: 'Engineering Services - Dubai Pipes Factory Co.',
+    desc: 'Beyond production: pipe design verification (AWWA M45, Caesar II), material pre-recommendation, site installation, inspection and supervision, and deflection verification.',
+  },
+  {
+    slug: 'blog',
+    title: 'Blog - Dubai Pipes Factory Co.',
+    desc: 'News, technical notes and project insights from Dubai Pipes Factory Co. (Coming soon.)',
+    dataScripts: ['/assets/js/blog-data.js'],
+  },
+  {
+    slug: 'projects',
+    title: 'Projects & Case Studies - Dubai Pipes Factory Co.',
+    desc: 'GRP pipe installations across the Middle East and GCC. (Coming soon.)',
+    dataScripts: ['/assets/js/projects-data.js'],
+  },
+];
+
+function nav() {
+  return `    <nav class="primary-nav" aria-label="Primary">
+      <div class="primary-nav__item">
+        <button class="primary-nav__toggle" aria-expanded="false" aria-haspopup="true">Products <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <ul class="primary-nav__menu">
+          <li><a href="/grp-pipes-benefits/">GRP Pipes Benefits</a></li>
+          <li><a href="/grp-pipes-general-information/">GRP Pipes General Information</a></li>
+          <li><a href="/grp-pipe-installation/">GRP Pipe Installation</a></li>
+          <li><a href="/product-testing/">Product Testing</a></li>
+        </ul>
+      </div>
+      <div class="primary-nav__item"><a class="primary-nav__link" href="/certifications-approvals/">Certifications</a></div>
+      <div class="primary-nav__item"><a class="primary-nav__link" href="/know-how-supplier/">Know-How Supplier</a></div>
+      <div class="primary-nav__item"><a class="primary-nav__link" href="/services/">Services</a></div>
+      <div class="primary-nav__item"><a class="primary-nav__link" href="/download-catalog/">Download Catalog</a></div>
+    </nav>`;
+}
+
+const HEADER = `<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label="Dubai Pipes Factory Co. - home">
+      <img class="brand__logo" src="/assets/images/logo.gif" alt="Dubai Pipes Factory Co." width="250" height="64">
+    </a>
+${nav()}
+    <div class="header-actions">
+      <div class="lang-picker">
+        <button class="lang-picker__btn" aria-haspopup="true" aria-expanded="false" aria-label="Language"><span class="lang-picker__label">EN</span> <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <ul class="lang-picker__menu"><li><button data-code="EN">English</button></li><li><button data-code="AR">العربية</button></li></ul>
+      </div>
+      <a class="btn btn--primary" href="/contact-us/">Request a Quote →</a>
+      <button class="nav-toggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>`;
+
+const MOBILE_NAV = `<aside class="mobile-nav" aria-label="Mobile">
+  <button class="mobile-nav__close" aria-label="Close menu">×</button>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/grp-pipes-benefits/">Products</a>
+      <ul class="mobile-sub">
+        <li><a href="/grp-pipes-benefits/">GRP Pipes Benefits</a></li>
+        <li><a href="/grp-pipes-general-information/">General Information</a></li>
+        <li><a href="/grp-pipe-installation/">GRP Pipe Installation</a></li>
+        <li><a href="/product-testing/">Product Testing</a></li>
+      </ul>
+    </li>
+    <li><a href="/certifications-approvals/">Certifications</a></li>
+    <li><a href="/know-how-supplier/">Know-How Supplier</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/download-catalog/">Download Catalog</a></li>
+    <li><a href="/contact-us/">Contact</a></li>
+  </ul>
+  <div class="mobile-nav__cta">
+    <a class="btn btn--primary btn--block" href="/contact-us/">Request a Quote →</a>
+    <a class="btn btn--ghost btn--block" href="tel:+97148851333">Call +971 4 885 1333</a>
+  </div>
+</aside>`;
+
+const CTA = `<section class="cta-band">
+  <div class="container cta-band__inner">
+    <div>
+      <h2>Specifying a GRP pipeline?</h2>
+      <p>Get a quote or talk to our engineering team about diameters, pressure ratings and installation method.</p>
+    </div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+      <a class="btn btn--ghost btn--lg" href="/contact-us/">Request a Quote</a>
+      <a class="btn btn--primary btn--lg" href="tel:+97148851333">Call +971 4 885 1333</a>
+    </div>
+  </div>
+</section>`;
+
+const FOOTER = `<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col footer-contact">
+        <a class="brand" href="/" style="margin-bottom:1rem"><span class="brand__top">DUBAI <span>PIPES</span></span><span class="brand__sub">Factory Co. · Dubai · UAE</span></a>
+        <p>Dubai Pipes Factory Co.<br>Jebel Ali Industrial Area<br>inside Dubai Investments Park<br>Dubai, UAE · P.O. Box 32902</p>
+        <p><a href="tel:+97148851333">+971 4 885 1333</a><br><a href="mailto:info@dubaipipes.com">info@dubaipipes.com</a></p>
+      </div>
+      <div class="footer-col"><h4>Products</h4><ul><li><a href="/grp-pipes-benefits/">GRP Pipes Benefits</a></li><li><a href="/grp-pipes-general-information/">General Information</a></li><li><a href="/grp-pipe-installation/">Pipe Installation</a></li><li><a href="/product-testing/">Product Testing</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="/certifications-approvals/">Certifications</a></li><li><a href="/know-how-supplier/">Know-How Supplier</a></li><li><a href="/services/">Services</a></li><li><a href="/contact-us/">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Resources</h4><ul><li><a href="/download-catalog/">Download Catalog</a></li><li><a href="/blog/">Blog</a></li><li><a href="/projects/">Projects</a></li><li><a href="/contact-us/">Request a Quote</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2011–2026 Dubai Pipes Factory Co. All Rights Reserved.</span><span>Jebel Ali Industrial Area · Dubai · UAE</span></div>
+  </div>
+</footer>
+
+<button class="to-top" aria-label="Back to top">↑</button>
+__SCRIPTS__
+</body>
+</html>`;
+
+function scriptsTag(page) {
+  // Data files load (defer) before script.js so their window globals exist
+  // when script.js's IIFE runs.
+  const data = page.dataScripts || [];
+  return [...data, '/assets/js/script.js']
+    .map((s) => `<script src="${s}" defer></script>`)
+    .join('\n');
+}
+
+function jsonldBlock(obj, slug) {
+  const base = { '@context': 'https://schema.org' };
+  const merged = { ...base, ...obj };
+  if (!merged.url) merged.url = 'https://dubaipipes.com/' + slug + '/';
+  if (!merged.name && obj['@type'] !== 'TechArticle') merged.name = 'Dubai Pipes Factory Co.';
+  if (!merged.telephone) merged.telephone = '+97148851333';
+  return '  <script type="application/ld+json">\n  ' + JSON.stringify(merged) + '\n  </script>';
+}
+
+function render(page) {
+  const fragment = readFileSync(join(SRC, page.slug + '.html'), 'utf8').trim();
+  const canonical = 'https://dubaipipes.com/' + page.slug + '/';
+  const ogImage = 'https://dubaipipes.com' + (page.ogImage || DEFAULT_OG);
+  const head = [
+    `  <title>${page.title}</title>`,
+    `  <meta name="description" content="${page.desc.replace(/"/g, '&quot;')}">`,
+    `  <link rel="canonical" href="${canonical}">`,
+    `  <meta property="og:type" content="website">`,
+    `  <meta property="og:title" content="${page.title.replace(/"/g, '&quot;')}">`,
+    `  <meta property="og:description" content="${page.desc.replace(/"/g, '&quot;')}">`,
+    `  <meta property="og:url" content="${canonical}">`,
+    `  <meta property="og:image" content="${ogImage}">`,
+    `  <meta name="twitter:card" content="summary_large_image">`,
+    `  <link rel="icon" href="${FAVICON}">`,
+    `  <link rel="stylesheet" href="/assets/css/fonts.css">`,
+    `  <link rel="stylesheet" href="/assets/css/styles.css">`,
+    page.leaflet ? `  <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">` : null,
+    jsonldBlock(page.jsonld || { '@type': 'WebPage' }, page.slug),
+  ].filter(Boolean).join('\n  ');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+${head}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+${HEADER}
+
+${MOBILE_NAV}
+
+<main id="main">
+${fragment}
+</main>
+
+${CTA}
+
+${FOOTER.replace('__SCRIPTS__', scriptsTag(page))}
+`;
+}
+
+let count = 0;
+for (const page of PAGES) {
+  const outDir = join(OUT, page.slug);
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(outDir, 'index.html'), render(page), 'utf8');
+  count++;
+}
+console.log('Generated ' + count + ' pages into public/.');

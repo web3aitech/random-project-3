@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Font options - Dubai Pipes Factory Co.</title>
+<link rel="stylesheet" href="/assets/css/fonts-options.css">
+<style>
+  :root{
+    --navy:#0D1B2A; --ink:#070E16; --primary:#C95C1A; --accent:#E8833E;
+    --text:#15202B; --muted:#5C6B7A; --line:#E2E7EE;
+    /* default (will be overridden per option) */
+    --font-display:"IBM Plex Sans"; --font-body:"IBM Plex Sans"; --font-mono:"IBM Plex Mono";
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-body);color:var(--text);background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:10;background:var(--ink);color:#fff;border-bottom:1px solid rgba(255,255,255,.08);padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;}
+  .bar b{font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:14px;}
+  .bar a{color:#9FAFBE;text-decoration:none;padding:4px 8px;border-radius:3px;}
+  .bar a:hover{color:#fff;background:rgba(255,255,255,.08);}
+  .opt{padding:64px clamp(20px,5vw,72px);border-bottom:1px solid var(--line);}
+  .opt--dark{background:var(--ink);color:#C8D3DF;border-color:rgba(255,255,255,.08);}
+  .opt__meta{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;flex-wrap:wrap;}
+  .opt__num{font-family:var(--font-mono);font-size:12px;color:var(--primary);letter-spacing:.1em;}
+  .opt--dark .opt__num{color:var(--accent);}
+  .opt__name{font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--navy);text-transform:uppercase;letter-spacing:.02em;}
+  .opt--dark .opt__name{color:#fff;}
+  .opt__pair{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.04em;}
+  .opt--dark .opt__pair{color:#9FAFBE;}
+  .opt__why{font-family:var(--font-body);font-size:14px;color:var(--muted);margin-left:auto;max-width:38ch;}
+  .opt--dark .opt__why{color:#9FAFBE;}
+  .sample{max-width:980px;}
+  .eyebrow{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.22em;color:var(--primary);font-size:12px;margin-bottom:14px;display:inline-block;}
+  .opt--dark .eyebrow{color:var(--accent);}
+  h1{font-family:var(--font-display);font-weight:700;line-height:.98;margin:0 0 18px;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;font-size:clamp(2.2rem,5vw,3.6rem);}
+  .opt--dark h1{color:#fff;}
+  h1 .ac{color:var(--accent);}
+  .lead{font-size:clamp(1.02rem,1.3vw,1.18rem);color:var(--muted);max-width:56ch;margin:0 0 22px;}
+  .opt--dark .lead{color:#AEBDCD;}
+  .stats{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);padding-top:16px;margin-bottom:22px;}
+  .opt--dark .stats{border-color:rgba(255,255,255,.14);}
+  .stat{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-right:20px;margin-right:20px;border-right:1px solid var(--line);}
+  .opt--dark .stat{color:#9FAFBE;border-color:rgba(255,255,255,.14);}
+  .stat:last-child{border-right:0;}
+  .stat b{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--navy);display:block;}
+  .opt--dark .stat b{color:#fff;}
+  .body{font-size:15px;color:#2A3947;max-width:62ch;margin:0 0 22px;}
+  .opt--dark .body{color:#AEBDCD;}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;padding:11px 20px;border-radius:3px;border:1.5px solid transparent;cursor:pointer;text-decoration:none;}
+  .btn--p{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .btn--g{background:transparent;color:#fff;border-color:rgba(255,255,255,.6);}
+  .btn--o{background:transparent;color:var(--primary);border-color:var(--primary);}
+  .spec{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:18px;letter-spacing:.04em;}
+  .opt--dark .spec{color:#9FAFBE;}
+  .pick{position:fixed;right:18px;bottom:18px;background:var(--navy);color:#fff;border:1px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:4px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);z-index:20;}
+  /* per-option font assignments */
+  .opt-plex{--font-display:"IBM Plex Sans";--font-body:"IBM Plex Sans";--font-mono:"IBM Plex Mono";}
+  .opt-clash{--font-display:"Clash Display";--font-body:"General Sans";--font-mono:"IBM Plex Mono";}
+  .opt-satoshi{--font-display:"Satoshi";--font-body:"Satoshi";--font-mono:"IBM Plex Mono";}
+  .opt-fraunces{--font-display:"Fraunces";--font-body:"Switzer";--font-mono:"Space Mono";}
+  .opt-hanken{--font-display:"Hanken Grotesk";--font-body:"Hanken Grotesk";--font-mono:"Space Mono";}
+  /* Fraunces headline should not be uppercased - serif reads better in title case */
+  .opt-fraunces h1{text-transform:none;letter-spacing:0;font-weight:700;font-style:normal;}
+  .opt-fraunces .opt__name{text-transform:none;}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <b>Dubai Pipes · Font study</b>
+  <a href="#opt1">01 Plex</a>
+  <a href="#opt2">02 Clash</a>
+  <a href="#opt3">03 Satoshi</a>
+  <a href="#opt4">04 Fraunces</a>
+  <a href="#opt5">05 Hanken</a>
+  <span style="margin-left:auto;color:#6E7E90">↳ pick one, tell me the number</span>
+</div>
+
+<!-- 01 -->
+<section class="opt opt-plex" id="opt1">
+  <div class="opt__meta">
+    <span class="opt__num">01</span>
+    <span class="opt__name">Engineering system</span>
+    <span class="opt__pair">IBM Plex Sans · IBM Plex Mono</span>
+    <span class="opt__why">Designed for IBM - clean, credible, technical. The mono pairing sells “engineering firm.” Safely premium, never trendy.</span>
+  </div>
+  <div class="sample">
+    <span class="eyebrow">GRP Pipe Manufacturer · Jebel Ali, Dubai</span>
+    <h1>Engineered GRP pipe systems for the Gulf's <span class="ac">water &amp; sewerage</span> networks</h1>
+    <p class="lead">GRP pipes, fittings, manhole liners and tanks up to 2400 mm diameter and 32 bar pressure - Flowtite® technology, BSI Kitemark-certified.</p>
+    <div class="stats">
+      <span class="stat"><b>2400MM</b>Max diameter</span>
+      <span class="stat"><b>32BAR</b>Pressure</span>
+      <span class="stat"><b>12M</b>Length</span>
+      <span class="stat"><b>150K M²</b>Plant</span>
+    </div>
+    <p class="body">Pipes are produced by the Continuous winding process using know-how and machinery supplied by Flowtite Technology AS, or by the Dual Helical winding process. Standard length up to 12 m; stiffness 2500, 5000 and 10000 N/m².</p>
+    <div class="btns"><a class="btn btn--o" href="#">Request a Quote →</a><a class="btn btn--o" href="#" style="color:var(--navy);border-color:var(--navy)">View Product Range</a></div>
+    <p class="spec">ASTM D3262 · D3517 · D3754 · BS EN 1796 · BS EN 14364 · AWWA C950</p>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="opt opt-clash opt--dark" id="opt2">
+  <div class="opt__meta">
+    <span class="opt__num">02</span>
+    <span class="opt__name">Design-forward industrial</span>
+    <span class="opt__pair">Clash Display · General Sans</span>
+    <span class="opt__why">Geometric display with real character + a calm body. Modern, premium, distinctive - reads as a design-led manufacturer.</span>
+  </div>
+  <div class="sample">
+    <span class="eyebrow">GRP Pipe Manufacturer · Jebel Ali, Dubai</span>
+    <h1>Engineered GRP pipe systems for the Gulf's <span class="ac">water &amp; sewerage</span> networks</h1>
+    <p class="lead">GRP pipes, fittings, manhole liners and tanks up to 2400 mm diameter and 32 bar pressure - Flowtite® technology, BSI Kitemark-certified.</p>
+    <div class="stats">
+      <span class="stat"><b>2400MM</b>Max diameter</span>
+      <span class="stat"><b>32BAR</b>Pressure</span>
+      <span class="stat"><b>12M</b>Length</span>
+      <span class="stat"><b>150K M²</b>Plant</span>
+    </div>
+    <p class="body">Pipes are produced by the Continuous winding process using know-how and machinery supplied by Flowtite Technology AS, or by the Dual Helical winding process. Standard length up to 12 m; stiffness 2500, 5000 and 10000 N/m².</p>
+    <div class="btns"><a class="btn btn--p" href="#">Request a Quote →</a><a class="btn btn--g" href="#">View Product Range</a></div>
+    <p class="spec">ASTM D3262 · D3517 · D3754 · BS EN 1796 · BS EN 14364 · AWWA C950</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="opt opt-satoshi" id="opt3">
+  <div class="opt__meta">
+    <span class="opt__num">03</span>
+    <span class="opt__name">Confident &amp; unified</span>
+    <span class="opt__pair">Satoshi (single family)</span>
+    <span class="opt__why">One distinctive geometric sans across everything. Clean, simple, characteristic - the “keep it simple” premium choice.</span>
+  </div>
+  <div class="sample">
+    <span class="eyebrow">GRP Pipe Manufacturer · Jebel Ali, Dubai</span>
+    <h1>Engineered GRP pipe systems for the Gulf's <span class="ac">water &amp; sewerage</span> networks</h1>
+    <p class="lead">GRP pipes, fittings, manhole liners and tanks up to 2400 mm diameter and 32 bar pressure - Flowtite® technology, BSI Kitemark-certified.</p>
+    <div class="stats">
+      <span class="stat"><b>2400MM</b>Max diameter</span>
+      <span class="stat"><b>32BAR</b>Pressure</span>
+      <span class="stat"><b>12M</b>Length</span>
+      <span class="stat"><b>150K M²</b>Plant</span>
+    </div>
+    <p class="body">Pipes are produced by the Continuous winding process using know-how and machinery supplied by Flowtite Technology AS, or by the Dual Helical winding process. Standard length up to 12 m; stiffness 2500, 5000 and 10000 N/m².</p>
+    <div class="btns"><a class="btn btn--o" href="#">Request a Quote →</a><a class="btn btn--o" href="#" style="color:var(--navy);border-color:var(--navy)">View Product Range</a></div>
+    <p class="spec">ASTM D3262 · D3517 · D3754 · BS EN 1796 · BS EN 14364 · AWWA C950</p>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="opt opt-fraunces opt--dark" id="opt4">
+  <div class="opt__meta">
+    <span class="opt__num">04</span>
+    <span class="opt__name">Editorial premium</span>
+    <span class="opt__pair">Fraunces (display) · Switzer (body) · Space Mono</span>
+    <span class="opt__why">A characterful serif headline paired with a clean sans body. The boldest, most “high-end” - a leading firm that wants to look considered.</span>
+  </div>
+  <div class="sample">
+    <span class="eyebrow">GRP Pipe Manufacturer · Jebel Ali, Dubai</span>
+    <h1>Engineered GRP pipe systems for the Gulf's <span class="ac">water &amp; sewerage</span> networks</h1>
+    <p class="lead">GRP pipes, fittings, manhole liners and tanks up to 2400 mm diameter and 32 bar pressure - Flowtite® technology, BSI Kitemark-certified.</p>
+    <div class="stats">
+      <span class="stat"><b>2400MM</b>Max diameter</span>
+      <span class="stat"><b>32BAR</b>Pressure</span>
+      <span class="stat"><b>12M</b>Length</span>
+      <span class="stat"><b>150K M²</b>Plant</span>
+    </div>
+    <p class="body">Pipes are produced by the Continuous winding process using know-how and machinery supplied by Flowtite Technology AS, or by the Dual Helical winding process. Standard length up to 12 m; stiffness 2500, 5000 and 10000 N/m².</p>
+    <div class="btns"><a class="btn btn--p" href="#">Request a Quote →</a><a class="btn btn--g" href="#">View Product Range</a></div>
+    <p class="spec">ASTM D3262 · D3517 · D3754 · BS EN 1796 · BS EN 14364 · AWWA C950</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="opt opt-hanken" id="opt5">
+  <div class="opt__meta">
+    <span class="opt__num">05</span>
+    <span class="opt__name">Clean Swiss grotesque</span>
+    <span class="opt__pair">Hanken Grotesk · Space Mono</span>
+    <span class="opt__why">A warm neo-grotesque with a quirky mono. Neutral-but-not-boring; reads precise and European.</span>
+  </div>
+  <div class="sample">
+    <span class="eyebrow">GRP Pipe Manufacturer · Jebel Ali, Dubai</span>
+    <h1>Engineered GRP pipe systems for the Gulf's <span class="ac">water &amp; sewerage</span> networks</h1>
+    <p class="lead">GRP pipes, fittings, manhole liners and tanks up to 2400 mm diameter and 32 bar pressure - Flowtite® technology, BSI Kitemark-certified.</p>
+    <div class="stats">
+      <span class="stat"><b>2400MM</b>Max diameter</span>
+      <span class="stat"><b>32BAR</b>Pressure</span>
+      <span class="stat"><b>12M</b>Length</span>
+      <span class="stat"><b>150K M²</b>Plant</span>
+    </div>
+    <p class="body">Pipes are produced by the Continuous winding process using know-how and machinery supplied by Flowtite Technology AS, or by the Dual Helical winding process. Standard length up to 12 m; stiffness 2500, 5000 and 10000 N/m².</p>
+    <div class="btns"><a class="btn btn--o" href="#">Request a Quote →</a><a class="btn btn--o" href="#" style="color:var(--navy);border-color:var(--navy)">View Product Range</a></div>
+    <p class="spec">ASTM D3262 · D3517 · D3754 · BS EN 1796 · BS EN 14364 · AWWA C950</p>
+  </div>
+</section>
+
+<div class="pick">Tell me the number that hits.</div>
+</body>
+</html>

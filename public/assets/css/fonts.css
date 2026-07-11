@@ -1,0 +1,54 @@
+/* Clash Display — geometric display face (headings, nav, labels, buttons)
+   Switzer — neo-grotesque body face (paragraphs, UI text)
+   Both vendored locally, no external CDN. Latin subset. */
+
+@font-face {
+  font-family: "Clash Display";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/options/clash-display-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Clash Display";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/options/clash-display-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Clash Display";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/options/clash-display-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Switzer";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/options/switzer-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Switzer";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/options/switzer-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Switzer";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/options/switzer-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Switzer";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/options/switzer-700.woff2") format("woff2");
+}
