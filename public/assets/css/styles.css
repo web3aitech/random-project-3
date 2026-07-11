@@ -91,8 +91,8 @@ h1, h2, h3, h4 {
   letter-spacing: var(--hd-track);
   text-transform: uppercase;
 }
-h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .94; }
-h2 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: .96; }
+h1 { font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: .94; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: .96; }
 h3 { font-size: 1.3rem; line-height: 1.1; }
 h4 { font-size: 1.05rem; line-height: 1.15; }
 
@@ -586,7 +586,7 @@ img.js-zoom { cursor: zoom-in; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-contact { grid-column: 1 / -1; }
 }
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
   .primary-nav, .header-actions .lang-picker { display:none; }
   .nav-toggle { display:flex; }
   .split { grid-template-columns: 1fr; }
