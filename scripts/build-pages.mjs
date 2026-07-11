@@ -99,13 +99,19 @@ function nav() {
 const HEADER = `<header class="site-header">
   <div class="container site-header__inner">
     <a class="brand" href="/" aria-label="Dubai Pipes Factory Co. - home">
-      <img class="brand__logo" src="/assets/images/logo.gif" alt="Dubai Pipes Factory Co." width="250" height="64">
+      <img class="brand__logo" src="/assets/images/logo.png" alt="Dubai Pipes Factory Co." width="992" height="266">
     </a>
 ${nav()}
     <div class="header-actions">
       <div class="lang-picker">
-        <button class="lang-picker__btn" aria-haspopup="true" aria-expanded="false" aria-label="Language"><span class="lang-picker__label">EN</span> <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <ul class="lang-picker__menu"><li><button data-code="EN">English</button></li><li><button data-code="AR">العربية</button></li></ul>
+        <button class="lang-picker__btn" aria-haspopup="true" aria-expanded="false" aria-label="Language">
+          <img class="lang-picker__flag" src="/assets/images/flag-us.svg" alt="US" width="20" height="14"><span class="lang-picker__label">EN</span>
+          <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="lang-picker__menu">
+          <li><button data-code="EN" data-flag="us"><img src="/assets/images/flag-us.svg" alt="US flag" width="20" height="14"> EN - English</button></li>
+          <li><button data-code="AR" data-flag="ae"><img src="/assets/images/flag-ae.svg" alt="UAE flag" width="20" height="14"> AR - العربية</button></li>
+        </ul>
       </div>
       <a class="btn btn--primary" href="/contact-us/">Request a Quote →</a>
       <button class="nav-toggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
@@ -154,7 +160,9 @@ const FOOTER = `<footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-col footer-contact">
-        <a class="brand" href="/" style="margin-bottom:1rem"><span class="brand__top">DUBAI <span>PIPES</span></span><span class="brand__sub">Factory Co. · Dubai · UAE</span></a>
+        <a class="brand" href="/" style="margin-bottom:1rem">
+          <img class="brand__logo" src="/assets/images/logo.png" alt="Dubai Pipes Factory Co." width="992" height="266" style="height:52px">
+        </a>
         <p>Dubai Pipes Factory Co.<br>Jebel Ali Industrial Area<br>inside Dubai Investments Park<br>Dubai, UAE · P.O. Box 32902</p>
         <p><a href="tel:+97148851333">+971 4 885 1333</a><br><a href="mailto:info@dubaipipes.com">info@dubaipipes.com</a></p>
       </div>

@@ -159,8 +159,18 @@
   const lbCap = $(".lightbox__caption", lb);
 
   // Exclude chrome imagery that should not open in the viewer.
-  const LB_EXCLUDE = ".brand__logo, .lang-picker img, .cert-strip__item img, [data-no-lightbox] img, [data-no-lightbox]";
+  // .leaflet-container img covers the map marker icon, shadows and controls so
+  // clicking the pin opens Leaflet's own popup, not the image viewer.
+  const LB_EXCLUDE = ".brand__logo, .lang-picker img, .cert-strip__item img, .leaflet-container img, [data-no-lightbox] img, [data-no-lightbox]";
   const lbExcluded = (el) => !!el.closest(LB_EXCLUDE);
+  // An image opens the viewer unless it is chrome, or it sits inside a normal
+  // <a> (a link to another page) - those should navigate, not pop the viewer.
+  // Images inside [data-lightbox] anchors and bare content images do open it.
+  function lbEligible(img) {
+    if (!img || !img.src || lbExcluded(img)) return false;
+    const a = img.closest("a");
+    return !(a && !a.hasAttribute("data-lightbox"));
+  }
   function srcFor(img) {
     const a = img.closest("a[data-lightbox]");
     if (a && a.getAttribute("href")) return a.getAttribute("href");
@@ -183,20 +193,22 @@
     lb.classList.remove("open");
     document.body.style.overflow = "";
   }
-  // Tag every eligible content image so it picks up the zoom cursor. Re-runs
-  // cheaply; safe with late/lazy images.
+  // Tag eligible images with the zoom cursor. Re-runs on DOM changes so
+  // CMS-rendered cards (blog/projects) and lazy-loaded thumbs get it too.
   function lbIndex() {
     $$("img").forEach((img) => {
-      if (!img.src || lbExcluded(img)) { img.classList.remove("js-zoom"); return; }
-      img.classList.add("js-zoom");
+      img.classList.toggle("js-zoom", lbEligible(img));
     });
   }
   lbIndex();
+  if ("MutationObserver" in window) {
+    new MutationObserver(() => lbIndex()).observe(document.body, { childList: true, subtree: true });
+  }
   // Clicking any eligible image opens the viewer showing only that image;
-  // prevent the underlying link's navigation to the raw file.
+  // prevent the underlying [data-lightbox] link's navigation to the raw file.
   document.addEventListener("click", (e) => {
     const img = e.target.closest && e.target.closest("img");
-    if (!img || !img.classList.contains("js-zoom")) return;
+    if (!lbEligible(img)) return;
     e.preventDefault();
     lbOpen(img);
   });
