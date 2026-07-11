@@ -44,8 +44,8 @@
 
   /* Layout */
   --container: 1280px;
-  --gutter: clamp(20px, 4.5vw, 56px);
-  --header-h: 76px;
+  --gutter: clamp(16px, 3.5vw, 48px);
+  --header-h: 64px;
   --hd-track: .2px;
 
   /* Motion */
@@ -63,7 +63,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--text);
   background: var(--bg);
@@ -91,10 +91,10 @@ h1, h2, h3, h4 {
   letter-spacing: var(--hd-track);
   text-transform: uppercase;
 }
-h1 { font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: .94; }
-h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: .96; }
-h3 { font-size: 1.3rem; line-height: 1.1; }
-h4 { font-size: 1.05rem; line-height: 1.15; }
+h1 { font-size: clamp(1.7rem, 3.5vw, 2.8rem); line-height: .94; }
+h2 { font-size: clamp(1.35rem, 2.4vw, 2rem); line-height: .96; }
+h3 { font-size: 1.1rem; line-height: 1.1; }
+h4 { font-size: .95rem; line-height: 1.15; }
 
 /* --------- Layout helpers --------- */
 .container { width: 100%; max-width: var(--container); margin: 0 auto; padding-inline: var(--gutter); }
