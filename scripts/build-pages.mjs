@@ -17,7 +17,7 @@ const ROOT = join(__dirname, '..');
 const SRC = join(ROOT, 'src-pages');
 const OUT = join(ROOT, 'public');
 
-const FAVICON = '/assets/images/logo.gif';
+const FAVICON = '/assets/images/favicon.png';
 const DEFAULT_OG = '/assets/images/home/ccfb5d9d36.jpg';
 
 const PAGES = [
@@ -211,9 +211,9 @@ function render(page) {
     `  <meta property="og:url" content="${canonical}">`,
     `  <meta property="og:image" content="${ogImage}">`,
     `  <meta name="twitter:card" content="summary_large_image">`,
-    `  <link rel="icon" href="${FAVICON}">`,
-    `  <link rel="stylesheet" href="/assets/css/fonts.css?v=4">`,
-    `  <link rel="stylesheet" href="/assets/css/styles.css?v=4">`,
+    `  <link rel="icon" type="image/png" href="${FAVICON}">`,
+    `  <link rel="stylesheet" href="/assets/css/fonts.css?v=6">`,
+    `  <link rel="stylesheet" href="/assets/css/styles.css?v=7">`,
     page.leaflet ? `  <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">` : null,
     jsonldBlock(page.jsonld || { '@type': 'WebPage' }, page.slug),
   ].filter(Boolean).join('\n  ');

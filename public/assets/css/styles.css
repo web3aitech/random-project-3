@@ -27,10 +27,10 @@
   --line: #E0E7EE;
   --line-strong: #C7D2DD;
 
-  /* Type - Inter (display + body, trial) + system mono (technical) */
-  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* Type - DM Sans (display + body) + Inter (technical/mono labels) */
+  --font-display: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
   /* Radii - engineered, tight */
   --r: 6px;
@@ -59,6 +59,14 @@
 /* --------- Reset --------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; overflow-x: hidden; }
+/* Desktop default-zoom calibration: at the browser's 100% zoom the layout read
+   as too zoomed-in and edge-hugging; 80% browser zoom was verified as the
+   correct render. Scaling the root to 0.8 makes the default 100% render match
+   that. Scoped to >=1024px so phones keep natural, readable sizing. Easy to
+   tune: change 0.8 (e.g. 0.85) if a touch less shrink is wanted. */
+@media (min-width: 1024px) {
+  html { zoom: 0.8; }
+}
 body {
   margin: 0;
   overflow-x: hidden;
@@ -204,16 +212,16 @@ h4 { font-size: .95rem; line-height: 1.15; }
   height: var(--header-h);
   display: flex;
   align-items: center;
-  gap: .75rem;
+  gap: 0;
 }
-.brand { display: inline-flex; align-items: center; line-height: 1; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; line-height: 1; text-decoration: none; flex-shrink: 0; transform: translateY(-3px); }
 .brand__logo { height: 44px; width: auto; max-width: 180px; display: block; object-fit: contain; }
 .brand__top { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; color: #fff; letter-spacing: .04em; text-transform: uppercase; }
 .brand__top span { color: var(--primary); }
 .brand__sub { font-family: var(--font-body); font-weight: 500; font-size: .66rem; letter-spacing: .28em; text-transform: uppercase; color: #8b98a8; margin-top: 3px; }
 .brand:hover .brand__top { color: #fff; }
 
-.primary-nav { display: flex; align-items: center; gap: 0; }
+.primary-nav { display: flex; align-items: center; gap: 0; margin-left: auto; }
 .primary-nav__item { position: relative; }
 .primary-nav__link, .primary-nav__toggle {
   display: inline-flex; align-items: center; gap: .25rem;
@@ -269,6 +277,7 @@ h4 { font-size: .95rem; line-height: 1.15; }
 .lang-picker__menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 150px; background: var(--navy-800); border:1px solid rgba(255,255,255,.08); border-radius: var(--r); box-shadow: var(--shadow-lg); list-style:none; margin:0; padding:.35rem; opacity:0;visibility:hidden; transform: translateY(-6px); transition: opacity var(--t) var(--ease), transform var(--t) var(--ease), visibility var(--t); z-index: 110; }
 .lang-picker.open .lang-picker__menu { opacity:1; visibility:visible; transform: translateY(0); }
 .lang-picker__menu button { display:flex; align-items:center; gap:.55rem; width:100%; text-align:left; background:none;border:none;color:#cdd6e2;font-family:var(--font-body);font-size:.85rem;padding:.5rem .7rem;border-radius:var(--r-sm);cursor:pointer; }
+.lang-picker__menu button:lang(ar), .lang-picker__menu button [lang="ar"] { font-family: system-ui, -apple-system, Arial, sans-serif; }
 .lang-picker__menu button:hover { background: rgba(255,255,255,.07); color:#fff; }
 .lang-picker__flag { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; flex-shrink: 0; }
 
@@ -349,10 +358,11 @@ h4 { font-size: .95rem; line-height: 1.15; }
 /* --------- Stat band --------- */
 .stat-band { display:grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: var(--ink); position: relative; }
 .stat-band.blueprint { background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 44px 44px, 44px 44px; background-color: var(--ink); }
-.stat { padding: clamp(26px, 3.2vw, 44px) clamp(18px, 2vw, 30px); border-right: 1px solid rgba(255,255,255,.09); position: relative; }
+.stat { padding: clamp(26px, 3.2vw, 44px) clamp(18px, 2vw, 30px); border-right: 1px solid rgba(255,255,255,.09); position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .stat:last-child { border-right: none; }
 .stat__num { font-family: var(--font-display); font-weight:700; font-size: clamp(2.4rem, 4.2vw, 3.4rem); color: #fff; line-height:.9; letter-spacing: .5px; }
 .stat__num .unit { font-family: var(--font-mono); font-size: .42em; color: var(--accent); font-weight: 500; letter-spacing:.05em; margin-left: .25em; }
+.stat__num .unit sup { font-size: .75em; vertical-align: super; line-height: 0; }
 .stat__label { font-family: var(--font-mono); font-size: .72rem; letter-spacing:.16em; text-transform:uppercase; color:#8C9CAB; margin-top:.85rem; }
 
 /* --------- Cards --------- */
@@ -588,13 +598,26 @@ img.js-zoom { cursor: zoom-in; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-contact { grid-column: 1 / -1; }
 }
-@media (max-width: 1100px) {
-  .primary-nav, .header-actions .lang-picker { display:none; }
+/* Collapse the full nav to the hamburger before it overflows on narrow
+   desktops/laptops (~1100-1260px). The lang-picker and CTA stay visible -
+   they fit alongside the logo + hamburger. */
+@media (max-width: 1260px) {
+  .primary-nav { display:none; }
   .nav-toggle { display:flex; }
+}
+@media (max-width: 1100px) {
   .split { grid-template-columns: 1fr; }
   .split__aside { position: static; }
   .hero__specrail { flex-wrap: wrap; }
   .hero__spec { margin-bottom: .6rem; }
+}
+/* Phones: the "Request a Quote" CTA is too wide alongside the logo +
+   lang-picker + hamburger, so hide it (it lives in the mobile drawer).
+   Compact the lang-picker and shrink the logo so the bar never overflows. */
+@media (max-width: 640px) {
+  .site-header .header-actions .btn--primary { display: none; }
+  .lang-picker__btn { padding: .5rem .75rem; }
+  .brand__logo { height: 38px; }
 }
 @media (max-width: 760px) {
   .stat-band { grid-template-columns: 1fr 1fr; }
