@@ -212,8 +212,8 @@ function render(page) {
     `  <meta property="og:image" content="${ogImage}">`,
     `  <meta name="twitter:card" content="summary_large_image">`,
     `  <link rel="icon" href="${FAVICON}">`,
-    `  <link rel="stylesheet" href="/assets/css/fonts.css?v=3">`,
-    `  <link rel="stylesheet" href="/assets/css/styles.css?v=3">`,
+    `  <link rel="stylesheet" href="/assets/css/fonts.css?v=4">`,
+    `  <link rel="stylesheet" href="/assets/css/styles.css?v=4">`,
     page.leaflet ? `  <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">` : null,
     jsonldBlock(page.jsonld || { '@type': 'WebPage' }, page.slug),
   ].filter(Boolean).join('\n  ');

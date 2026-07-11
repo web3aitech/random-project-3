@@ -27,9 +27,9 @@
   --line: #E0E7EE;
   --line-strong: #C7D2DD;
 
-  /* Type - Hanken Grotesk (display + body) + Space Mono (technical) */
-  --font-display: "Clash Display", system-ui, -apple-system, sans-serif;
-  --font-body: "Switzer", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  /* Type - Inter (display + body, trial) + system mono (technical) */
+  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Radii - engineered, tight */
@@ -90,6 +90,8 @@ h1, h2, h3, h4 {
   color: var(--navy);
   letter-spacing: var(--hd-track);
   text-transform: uppercase;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 h1 { font-size: clamp(1.7rem, 3.5vw, 2.8rem); line-height: .94; }
 h2 { font-size: clamp(1.35rem, 2.4vw, 2rem); line-height: .96; }
@@ -314,7 +316,7 @@ h4 { font-size: .95rem; line-height: 1.15; }
   mask-image: linear-gradient(96deg, #000 30%, transparent 75%); }
 .hero__inner { position: relative; z-index: 2; padding: clamp(52px, 8vw, 100px) 0 clamp(36px, 4.5vw, 60px); max-width: 820px; }
 .hero__eyebrow { color: var(--accent); }
-.hero h1 { color: #fff; font-size: clamp(2rem, 5vw, 3.6rem); margin-bottom: 1rem; }
+.hero h1 { color: #fff; font-size: clamp(1.4rem, 5vw, 3.2rem); margin-bottom: 1rem; overflow-wrap: break-word; word-break: break-word; }
 .hero h1 .accent { color: var(--accent); }
 .hero p { font-size: clamp(.95rem, 1.3vw, 1.12rem); color: #C8D3DF; max-width: 56ch; line-height: 1.6; margin-bottom: 0; }
 .hero__actions { display:flex; flex-wrap:wrap; gap: .85rem; margin-top: 1.6rem; }
@@ -329,7 +331,7 @@ h4 { font-size: .95rem; line-height: 1.15; }
 .hero__corner--br { bottom: 22px; right: 22px; border-bottom:1px solid; border-right:1px solid; }
 
 .hero--compact .hero__inner { padding: clamp(48px, 7vw, 88px) 0; }
-.hero--compact h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+.hero--compact h1 { font-size: clamp(1.3rem, 4vw, 2.6rem); }
 
 /* page banner (interior pages) */
 .page-hero { background: var(--ink); color:#fff; position:relative; overflow:hidden; }

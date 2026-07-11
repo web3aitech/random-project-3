@@ -1,54 +1,13 @@
-/* Clash Display — geometric display face (headings, nav, labels, buttons)
-   Switzer — neo-grotesque body face (paragraphs, UI text)
-   Both vendored locally, no external CDN. Latin subset. */
+/* Inter — single variable typeface for headings + body (trial).
+   Vendored locally, latin subset, wght 100–900, no external CDN.
+   The previous Clash Display (headings) + Switzer (body) @font-face blocks
+   were removed so unused files aren't fetched. The technical/mono voice
+   (--font-mono) is unchanged. */
 
 @font-face {
-  font-family: "Clash Display";
+  font-family: "Inter";
   font-style: normal;
-  font-weight: 500;
+  font-weight: 100 900;
   font-display: swap;
-  src: url("../fonts/options/clash-display-500.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Clash Display";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("../fonts/options/clash-display-600.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Clash Display";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../fonts/options/clash-display-700.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Switzer";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../fonts/options/switzer-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Switzer";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("../fonts/options/switzer-500.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Switzer";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("../fonts/options/switzer-600.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Switzer";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../fonts/options/switzer-700.woff2") format("woff2");
+  src: url("../fonts/inter-latin.woff2") format("woff2");
 }
