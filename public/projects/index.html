@@ -14,7 +14,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <link rel="stylesheet" href="/assets/css/fonts.css?v=6">
-    <link rel="stylesheet" href="/assets/css/styles.css?v=7">
+    <link rel="stylesheet" href="/assets/css/styles.css?v=8">
     <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","url":"https://dubaipipes.com/projects/","name":"Dubai Pipes Factory Co.","telephone":"+97148851333"}
   </script>
@@ -93,20 +93,96 @@
     </div>
   </section>
 
+  <!-- ============ CASE-STUDY INDEX (metric headline cards) ============ -->
   <section class="section">
     <div class="container">
-      <div class="text-center" data-reveal>
-        <span class="eyebrow">Coming soon</span>
-        <h2>Project case studies are being prepared</h2>
-        <div class="divider center-divider"></div>
-        <p class="lead" style="margin-inline:auto">This showcase is scaffolded and ready for content. Entries will be managed through a CMS - no code required.</p>
+      <div class="shead shead--center" data-reveal>
+        <h2>Delivered installations at a glance</h2>
+        <p class="lead" style="margin-inline:auto">Each case study opens with the headline metrics - diameter, length, location, year - then the full engineering story.</p>
       </div>
 
-      <div class="grid grid-3" id="projects-grid" style="margin-top:2.5rem" data-reveal>
+      <div class="metric-grid" id="projects-grid" style="margin-top:2.5rem" data-reveal>
         <!-- Cards render here from assets/js/projects-data.js. -->
-        <div data-empty style="display:none;grid-column:1/-1;text-align:center">
-          <p class="form-note" style="margin-top:1rem">No case studies published yet. To add one, drop an object into <code>assets/js/projects-data.js</code> (or wire a CMS - see the file's integration note).</p>
-          <p style="margin-top:1.5rem"><a class="btn btn--outline" href="/contact-us/">Discuss a reference project with us</a></p>
+        <div data-empty style="display:none;grid-column:1/-1;text-align:center;border:1px dashed var(--line-strong);border-radius:var(--r);padding:2.5rem;background:var(--bg-alt)">
+          <span class="eyebrow">Coming soon</span>
+          <p class="lead" style="margin:.75rem auto 0">No case studies published yet.</p>
+          <p class="form-note" style="margin-top:1rem">To add one, drop an object into <code>assets/js/projects-data.js</code> (or wire a CMS - see the file's integration note). The card + the long-form template below render from that data with no other change.</p>
+          <p style="margin-top:1.5rem"><a class="btn btn--outline" href="/contact-us/">Discuss a reference project with us <span class="btn__arrow">&rarr;</span></a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LONG-FORM CASE-STUDY TEMPLATE (format preview) ============ -->
+  <section class="section section--alt section--blend section--blend--from-bg">
+    <div class="container">
+      <div class="shead shead--center" data-reveal>
+        <h2>The case-study format</h2>
+        <p class="lead" style="margin-inline:auto">A preview of the long-form template each published project renders into - Overview, Challenge, Solution, Delivery, Results and Key specs.</p>
+      </div>
+
+      <div class="split" style="margin-top:2.5rem" data-reveal>
+        <div class="prose">
+          <span class="eyebrow">Format preview &middot; not a live project</span>
+          <h2>[ Project title ]</h2>
+          <div class="divider"></div>
+          <p class="lead" style="color:var(--text-muted)">[ Client &middot; location &middot; year - populated on publish ]</p>
+
+          <div class="metric-grid" style="margin:1.5rem 0">
+            <div class="metric-card"><div class="metric-card__metric">DN<span class="unit">&nbsp;</span></div><div class="metric-card__label">Diameter</div></div>
+            <div class="metric-card"><div class="metric-card__metric">-<span class="unit">km</span></div><div class="metric-card__label">Length</div></div>
+            <div class="metric-card"><div class="metric-card__metric">-<span class="unit">bar</span></div><div class="metric-card__label">Pressure</div></div>
+          </div>
+
+          <h3>Overview</h3><p>[ Scope, client, the network served, and where Dubai Pipes GRP was specified. ]</p>
+          <h3>The challenge</h3><p>[ The site, soil, fluid or timeline constraint the design had to solve. ]</p>
+          <h3>The solution</h3><p>[ Pipe class, stiffness, jointing method and installation technique selected. ]</p>
+          <h3>What we delivered</h3><p>[ Production, supply, site services, inspection and supervision provided. ]</p>
+          <h3>Results</h3><p>[ Installation outcome, performance to date, and any verifiable metrics. ]</p>
+
+          <h3>Key specs</h3>
+          <table class="spec-table">
+            <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Diameter</td><td>[ DN ]</td></tr>
+              <tr><td>Pressure rating</td><td>[ bar ]</td></tr>
+              <tr><td>Stiffness class</td><td>[ SN ]</td></tr>
+              <tr><td>Joint type</td><td>[ coupling ]</td></tr>
+              <tr><td>Standard</td><td>[ AWWA / BS EN / ASTM ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="split__aside">
+          <div class="aside-card">
+            <h3>[ Project gallery ]</h3>
+            <p style="color:var(--text-muted)">Installation and facility photography appears here for each published case study.</p>
+          </div>
+          <div class="aside-card">
+            <h3>Reference on request</h3>
+            <p style="color:var(--text-muted)">Detailed references and project records are available to specifiers on request.</p>
+            <p><a class="btn btn--outline" href="/contact-us/">Request a reference <span class="btn__arrow">&rarr;</span></a></p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLIENT REFERENCES (scaffold) ============ -->
+  <section class="section section--blend section--blend--from-alt">
+    <div class="container">
+      <div class="shead shead--center" data-reveal>
+        <h2>What our clients say</h2>
+        <p class="lead" style="margin-inline:auto">Client references are available on request - this section renders verifiable quotes once supplied.</p>
+      </div>
+      <div class="quotes" style="margin-top:2rem" data-reveal>
+        <div class="quote-card">
+          <span class="quote-card__note">Reference on request</span>
+          <p>Engineer and client testimonials will appear here once provided and approved for publication.</p>
+        </div>
+        <div class="quote-card">
+          <span class="quote-card__note">Reference on request</span>
+          <p>No quotes are fabricated for the demo. Drop a {quote, name, role} object into the render to publish one.</p>
         </div>
       </div>
     </div>

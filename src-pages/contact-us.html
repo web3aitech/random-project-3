@@ -1,0 +1,90 @@
+  <section class="page-hero">
+    <div class="page-hero__media"><img src="/assets/images/contact-us/hero-contact.webp" alt=""></div>
+    <div class="container page-hero__inner">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> / Contact</nav>
+      <h1>Contact &amp; Location</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div data-reveal>
+          <span class="eyebrow">Get in touch</span>
+          <h2>Request a quote</h2>
+          <div class="divider"></div>
+          <p class="lead">Send your project details and our engineering team will respond with pipe specifications, pricing and lead times.</p>
+
+          <div class="form-success" id="quote-form-success" role="status">Thank you - your request has been received. Our team will contact you within one business day. <em>(Demo: no message was actually sent.)</em></div>
+          <!-- INTEGRATION POINT: set the form `action` to your form handler / Vercel
+               function / form service endpoint and remove the JS preventDefault in
+               script.js once a real backend is wired. -->
+          <form class="form" id="quote-form" action="" method="post" novalidate>
+            <div class="form-row">
+              <div class="field">
+                <label for="f-name">Full name *</label>
+                <input id="f-name" name="name" type="text" required autocomplete="name">
+              </div>
+              <div class="field">
+                <label for="f-company">Company</label>
+                <input id="f-company" name="company" type="text" autocomplete="organization">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="f-phone">Phone *</label>
+                <input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="+971 ...">
+              </div>
+              <div class="field">
+                <label for="f-email">Email</label>
+                <input id="f-email" name="email" type="email" autocomplete="email">
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-type">Project type</label>
+              <select id="f-type" name="projectType">
+                <option value="">Select&hellip;</option>
+                <option>Water transmission &amp; distribution</option>
+                <option>Sanitary sewerage</option>
+                <option>Storm water</option>
+                <option>Seawater intake / outfall</option>
+                <option>Irrigation</option>
+                <option>Industrial / chemical lines</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-message">Message *</label>
+              <textarea id="f-message" name="message" required placeholder="Diameter, pressure rating, length, installation method, delivery location&hellip;"></textarea>
+            </div>
+            <p class="form-note">By submitting you agree to be contacted about your enquiry. We do not share your details.</p>
+            <button type="submit" class="btn btn--primary btn--lg">Send request</button>
+          </form>
+        </div>
+
+        <aside class="split__aside" data-reveal>
+          <div class="aside-card">
+            <h3>Dubai Pipes Factory Co.</h3>
+            <ul class="contact-list">
+              <li><span class="label">Tel</span><a href="tel:+97148851333">+971 4 885 1333</a></li>
+              <li><span class="label">Fax</span>+971 4 885 1116</li>
+              <li><span class="label">Email</span><a href="mailto:info@dubaipipes.com">info@dubaipipes.com</a></li>
+              <li><span class="label">Web</span>dubaipipes.com</li>
+              <li><span class="label">P.O. Box</span>32902, Dubai</li>
+              <li><span class="label">Address</span>Jebel Ali Industrial Area, inside Dubai Investments Park, Dubai, UAE</li>
+            </ul>
+          </div>
+          <div class="aside-card">
+            <h3>Plant location</h3>
+            <p>Located in the Emirate of Dubai, Jebel Ali Industrial Area - close to Dubai City, near Jebel Ali Free Zone, and around 100&nbsp;km from Abu Dhabi. The plant is built over an area of 150,000&nbsp;m<sup>2</sup>.</p>
+            <p><a href="/assets/docs/dubai-pipes-location-map.pdf">Download location map (PDF) &rarr;</a></p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="map-wrap" style="margin-top:clamp(32px,5vw,56px)" data-reveal>
+        <div id="map" class="map" role="region" aria-label="Interactive map of Dubai Pipes Factory Co."></div>
+      </div>
+
+    </div>
+  </section>

@@ -53,13 +53,17 @@ PLAN.md                      ← full redesign plan (phases 0–10, Demo 2 outli
 
 ## How pages are built
 
-- **Home** and **Contact** are hand-authored HTML (they have unique layouts: hero
-  stat band, and the map + form respectively).
-- The other 10 interior pages are **generated** by `scripts/build-pages.mjs`: each
-  page's `<main>` lives as a fragment in `src-pages/<slug>.html`, and the generator
-  wraps it with the shared `<head>` (SEO meta + JSON-LD), header, mobile nav, CTA
-  band, and footer. This keeps the chrome identical across pages without a build
-  step at deploy time - the generated HTML is committed to `public/`.
+- **All 12 pages are generated** by `scripts/build-pages.mjs`, including Home
+  (`src-pages/home.html`, written to `public/index.html`) and Contact
+  (`src-pages/contact-us.html`, with the Leaflet map). Each page's `<main>` lives
+  as a fragment in `src-pages/<slug>.html`, and the generator wraps it with the
+  shared `<head>` (SEO meta + JSON-LD), header, mobile nav, CTA band, and footer.
+  The generator is the **single source of chrome** - a header/footer/CTA edit is
+  one place. The generated HTML is committed to `public/`. (Home omits the
+  post-`<main>` CTA band - its quote form is the CTA - via `omitCta`; Contact
+  uses a custom "Prefer to talk?" CTA via `page.cta`.)
+- `public/font-preview/index.html` is the one standalone hand-authored utility
+  page (font comparison); it is outside the generator.
 - To edit an interior page's content, edit `src-pages/<slug>.html` and re-run
   `npm run build`. To change the shared header/footer/CTA for all interior pages,
   edit `scripts/build-pages.mjs` and re-run `npm run build`.
@@ -69,9 +73,36 @@ PLAN.md                      ← full redesign plan (phases 0–10, Demo 2 outli
 Defined as CSS custom properties at the top of `public/assets/css/styles.css`:
 
 ```
---navy #0D1B2A   --primary #C95C1A   --accent #E07B3F   --gold #B8860B
-Barlow Condensed (display) + Inter (body)   radii 4–6px
+--blue #0C1B64  --navy #0A1547  --ink #060D2E   --primary #C9A227 (dune)  --accent #DBB85C
+DM Sans (display + body) + Inter (technical labels)   radii 3/6px
 ```
+
+## Section-block system
+
+The shared stylesheet ships a reusable block library (composed across pages,
+inspired by a modern SaaS landing-page rhythm but in this project's own
+industrial-engineering voice). New blocks, all on the tokens above:
+
+- `.compare` - "Without GRP / With Dubai Pipes GRP" comparison table (home).
+- `.steps` / `.steps--row` - numbered manufacturing / installation / test
+  sequences (home, `grp-pipe-installation`, `product-testing`).
+- `.problem-cards` - grid wrapper around `.card` for "problems with
+  conventional pipe" (home).
+- `.sectors` / `.sector-chip` - audience / application chip row (home,
+  `grp-pipes-benefits`).
+- `.faq` / `.faq__btn` / `.faq__panel` - ARIA-driven accordion (home,
+  `know-how-supplier`). No-JS and `prefers-reduced-motion` both resolve open.
+- `.metric-card` / `.metric-grid` - case-study headline cards, driven by
+  `projects-data.js` (`/projects/`).
+- `.quotes` / `.quote-card` - testimonials scaffold ("references on request"
+  until real quotes are supplied; never fabricated).
+
+Smooth transitions: reveal variants (`data-reveal="fade|scale|clip"`, default
+`up`), `.section--blend` / `--from-alt|navy|ink` color-blend masks between
+adjacent section grounds, a scroll-linked line-draw on the signature
+`.pipe-diagram` cross-section (falls back to one-shot reveal when JS or
+reduced-motion opts out), and `scroll-margin-top` for anchored sections. All
+motion is `prefers-reduced-motion` guarded.
 
 ## CMS integration path (Phase 11, post-decision)
 

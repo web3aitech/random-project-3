@@ -123,6 +123,36 @@
     revealEls.forEach((el) => el.classList.add("is-visible"));
   }
 
+  /* ---------- stat count-up ---------- */
+  const statNums = $$(".stat__num[data-count]");
+  if (statNums.length && "IntersectionObserver" in window) {
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    function animateCount(el) {
+      const target = +el.dataset.count;
+      const suffix = el.dataset.countSuffix || "";
+      const unit = el.querySelector(".unit");
+      const unitHTML = unit ? unit.outerHTML : "";
+      const duration = 1500;
+      const start = performance.now();
+      (function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        el.innerHTML = Math.round(easeOut(p) * target) + suffix + unitHTML;
+        if (p < 1) requestAnimationFrame(tick);
+      })(start);
+    }
+    const countIO = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          animateCount(en.target);
+          obs.unobserve(en.target);
+        });
+      },
+      { threshold: 0.4 }
+    );
+    statNums.forEach((el) => countIO.observe(el));
+  }
+
   /* ---------- back to top ---------- */
   const toTop = $(".to-top");
   if (toTop) {
@@ -132,6 +162,56 @@
       window.scrollTo({ top: 0, behavior: "smooth" })
     );
     onScroll();
+  }
+
+  /* ---------- FAQ accordion (ARIA-driven, mirrors the nav dropdown) ----------
+     Markup: .faq > .faq__item > button.faq__btn[aria-expanded] + .faq__panel.
+     CSS opens the panel via grid-template-rows; JS only toggles aria-expanded. */
+  const faqBtns = $$(".faq__btn");
+  faqBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+    });
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const btn = e.target.closest && e.target.closest(".faq__btn");
+    if (btn) { btn.setAttribute("aria-expanded", "false"); btn.focus(); }
+  });
+
+  /* ---------- scroll-linked pipe-diagram line draw ----------
+     Replaces the one-shot CSS reveal-draw with a draw that follows scroll
+     progress through the section. Falls back to the CSS one-shot draw when
+     reduced-motion is set or IntersectionObserver is unavailable. */
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    $$(".pipe-diagram").forEach((svg) => {
+      svg.classList.add("pipe-diagram--scroll");
+      const section = svg.closest("section") || svg.parentElement;
+      let active = false;
+      const setDraw = (p) => svg.style.setProperty("--draw", String(p));
+      setDraw(0);
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          active = en.isIntersecting;
+          if (!active && en.boundingClientRect.top < 0) setDraw(1); // past → drawn
+        });
+      }, { rootMargin: "0px 0px -25% 0px", threshold: 0 });
+      io.observe(section);
+      function onScroll() {
+        if (!active) return;
+        const r = section.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const p = Math.max(0, Math.min(1, (vh * 0.7 - r.top) / (vh * 0.4)));
+        setDraw(p);
+      }
+      let rt = false;
+      window.addEventListener("scroll", () => {
+        if (!rt) { requestAnimationFrame(() => { onScroll(); rt = false; }); rt = true; }
+      }, { passive: true });
+      onScroll();
+    });
   }
 
   /* ---------- lightbox ----------
@@ -303,15 +383,21 @@
 
   const proj = $("#projects-grid");
   if (proj && window.PROJECTS) {
-    renderCards(proj, window.PROJECTS, (p) => `
-      <article class="media-card" data-reveal>
-        <div class="media-card__media"><img src="${p.image}" alt="${escapeAttr(p.title)}" loading="lazy"></div>
-        <div class="media-card__body">
-          <span class="eyebrow">${escapeHtml(p.location)} · ${escapeHtml(p.scope)}</span>
-          <h3>${escapeHtml(p.title)}</h3>
-          <p>${escapeHtml(p.summary)}</p>
-        </div>
-      </article>`);
+    renderCards(proj, window.PROJECTS, (p) => {
+      const m = Array.isArray(p.metrics) && p.metrics[0] ? p.metrics[0] : {};
+      const meta = [p.location, p.year].filter(Boolean).map(escapeHtml).join(" · ");
+      const head = escapeHtml(m.value != null ? m.value : p.title);
+      const unit = m.unit ? `<span class="unit">${escapeHtml(m.unit)}</span>` : "";
+      return `
+      <article class="metric-card" data-reveal>
+        <div class="metric-card__metric">${head}${unit}</div>
+        <div class="metric-card__label">${escapeHtml(m.label || "Metric")}</div>
+        <h3 class="metric-card__title">${escapeHtml(p.title)}</h3>
+        ${meta ? `<div class="metric-card__meta">${meta}</div>` : ""}
+        ${p.summary ? `<p style="margin:.6rem 0 0;color:var(--text-muted)">${escapeHtml(p.summary)}</p>` : ""}
+        ${p.url ? `<a class="card__link" href="${escapeAttr(p.url)}">Read the case study <span class="btn__arrow">&rarr;</span></a>` : ""}
+      </article>`;
+    });
   }
 
   const specTable = $("#spec-table");

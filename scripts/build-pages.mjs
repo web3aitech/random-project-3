@@ -1,14 +1,22 @@
 // build-pages.mjs
-// Static-site generator for the interior pages of the dubaipipes.com redesign.
-// Wraps a per-page <main> fragment (in src-pages/<slug>.html) with the shared
-// <head> + header + mobile nav + CTA band + footer + scripts (the "chrome").
+// Static-site generator. Wraps a per-page <main> fragment (in
+// src-pages/<slug>.html) with the shared <head> + header + mobile nav +
+// CTA band + footer + scripts (the "chrome"). The generator is the single
+// source of truth for chrome: home and contact are fragments here too, so a
+// header/footer/CTA edit is one-place.
 //
-// The home page (public/index.html) is hand-authored and NOT regenerated.
-// The contact page (public/contact-us/index.html) is hand-authored (map + form)
-// and NOT regenerated. Everything else is generated here.
+// Page object fields:
+//   slug        interior page slug → public/<slug>/index.html
+//   root:true   home page → public/index.html (canonical has no slug)
+//   title/desc  SEO
+//   jsonld      object OR array of objects (home emits LocalBusiness + ProfessionalService)
+//   dataScripts extra <script defer> before script.js (data files)
+//   leaflet:true add vendored Leaflet CSS+JS (contact map)
+//   omitCta:true  suppress the post-<main> CTA band (home: its quote form is the CTA)
+//   cta         custom CTA band markup to use instead of the default
 //
 // Usage:  node scripts/build-pages.mjs
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,6 +29,81 @@ const FAVICON = '/assets/images/favicon.png';
 const DEFAULT_OG = '/assets/images/home/ccfb5d9d36.jpg';
 
 const PAGES = [
+  {
+    root: true,
+    title: 'Dubai Pipes Factory Co - Leading GRP pipe manufacturer in Dubai',
+    desc: 'Dubai Pipes Factory Co. manufactures Glass Reinforced Plastic (GRP) pipes, fittings, manhole liners and tanks up to 2400 mm diameter and 32 bar pressure, built on Flowtite® technology and BSI Kitemark-certified quality.',
+    ogImage: '/assets/images/home/ccfb5d9d36.jpg',
+    omitCta: true,
+    jsonld: [
+      {
+        '@type': 'LocalBusiness',
+        '@id': 'https://dubaipipes.com/#org',
+        name: 'Dubai Pipes Factory Co.',
+        image: 'https://dubaipipes.com/assets/images/home/ccfb5d9d36.jpg',
+        url: 'https://dubaipipes.com/',
+        telephone: '+97148851333',
+        email: 'info@dubaipipes.com',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Jebel Ali Industrial Area, Dubai Investments Park',
+          addressLocality: 'Dubai',
+          addressCountry: 'AE',
+          postalCode: '32902',
+        },
+        geo: { '@type': 'GeoCoordinates', latitude: 24.975, longitude: 55.175 },
+        openingHours: 'Mo-Th 08:00-17:00',
+        areaServed: 'Middle East, GCC, UAE',
+        sameAs: [],
+      },
+      {
+        '@type': 'ProfessionalService',
+        name: 'Dubai Pipes Factory Co.',
+        serviceType: 'GRP pipe manufacturing',
+        url: 'https://dubaipipes.com/',
+        telephone: '+97148851333',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Jebel Ali Industrial Area, Dubai Investments Park',
+          addressLocality: 'Dubai',
+          addressCountry: 'AE',
+        },
+      },
+    ],
+  },
+  {
+    slug: 'contact-us',
+    title: 'Contact & Location - Dubai Pipes Factory Co.',
+    desc: 'Contact Dubai Pipes Factory Co. in Jebel Ali Industrial Area, Dubai Investments Park. Call +971 4 885 1333, email info@dubaipipes.com, or request a GRP pipe quote online.',
+    leaflet: true,
+    cta: `<section class="cta-band cta-band--navy">
+  <div class="container cta-band__inner">
+    <div>
+      <h2>Prefer to talk?</h2>
+      <p>Our engineering team can advise on material selection, pressure ratings and installation methods.</p>
+    </div>
+    <a class="btn btn--primary btn--lg" href="tel:+97148851333">Call +971 4 885 1333</a>
+  </div>
+</section>`,
+    jsonld: {
+      '@type': 'ContactPage',
+      name: 'Contact & Location - Dubai Pipes Factory Co.',
+      url: 'https://dubaipipes.com/contact-us/',
+      mainEntity: {
+        '@type': 'Organization',
+        name: 'Dubai Pipes Factory Co.',
+        telephone: '+97148851333',
+        email: 'info@dubaipipes.com',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Jebel Ali Industrial Area, Dubai Investments Park',
+          addressLocality: 'Dubai',
+          addressCountry: 'AE',
+          postalCode: '32902',
+        },
+      },
+    },
+  },
   {
     slug: 'certifications-approvals',
     title: 'Certifications & Approvals - Dubai Pipes Factory Co.',
@@ -110,7 +193,7 @@ ${nav()}
         </button>
         <ul class="lang-picker__menu">
           <li><button data-code="EN" data-flag="us"><img src="/assets/images/flag-us.svg" alt="US flag" width="20" height="14"> EN - English</button></li>
-          <li><button data-code="AR" data-flag="ae"><img src="/assets/images/flag-ae.svg" alt="UAE flag" width="20" height="14"> AR - العربية</button></li>
+          <li><button data-code="AR" data-flag="ae"><img src="/assets/images/flag-ae.svg" alt="UAE flag" width="20" height="14"> AR - <span lang="ar">العربية</span></button></li>
         </ul>
       </div>
       <a class="btn btn--primary" href="/contact-us/">Request a Quote →</a>
@@ -180,26 +263,33 @@ __SCRIPTS__
 </html>`;
 
 function scriptsTag(page) {
-  // Data files load (defer) before script.js so their window globals exist
-  // when script.js's IIFE runs.
+  // Data files load (defer) before Leaflet and script.js so their window
+  // globals exist when script.js's IIFE runs. Leaflet must precede script.js
+  // (script.js reads window.L for the contact map).
   const data = page.dataScripts || [];
-  return [...data, '/assets/js/script.js']
+  const leaflet = page.leaflet ? ['/assets/vendor/leaflet/leaflet.js'] : [];
+  return [...data, ...leaflet, '/assets/js/script.js']
     .map((s) => `<script src="${s}" defer></script>`)
     .join('\n');
 }
 
 function jsonldBlock(obj, slug) {
-  const base = { '@context': 'https://schema.org' };
-  const merged = { ...base, ...obj };
-  if (!merged.url) merged.url = 'https://dubaipipes.com/' + slug + '/';
-  if (!merged.name && obj['@type'] !== 'TechArticle') merged.name = 'Dubai Pipes Factory Co.';
-  if (!merged.telephone) merged.telephone = '+97148851333';
-  return '  <script type="application/ld+json">\n  ' + JSON.stringify(merged) + '\n  </script>';
+  const objs = Array.isArray(obj) ? obj : [obj];
+  return objs.map((o) => {
+    const merged = { '@context': 'https://schema.org', ...o };
+    if (!merged.url) merged.url = 'https://dubaipipes.com/' + (slug || '') + (slug ? '/' : '');
+    if (!merged.name && o['@type'] !== 'TechArticle') merged.name = 'Dubai Pipes Factory Co.';
+    if (!merged.telephone) merged.telephone = '+97148851333';
+    return '  <script type="application/ld+json">\n  ' + JSON.stringify(merged) + '\n  </script>';
+  }).join('\n');
 }
 
 function render(page) {
-  const fragment = readFileSync(join(SRC, page.slug + '.html'), 'utf8').trim();
-  const canonical = 'https://dubaipipes.com/' + page.slug + '/';
+  const fragmentSrc = page.root ? 'home' : page.slug;
+  const fragment = readFileSync(join(SRC, fragmentSrc + '.html'), 'utf8').trim();
+  const canonical = page.root
+    ? 'https://dubaipipes.com/'
+    : 'https://dubaipipes.com/' + page.slug + '/';
   const ogImage = 'https://dubaipipes.com' + (page.ogImage || DEFAULT_OG);
   const head = [
     `  <title>${page.title}</title>`,
@@ -213,10 +303,12 @@ function render(page) {
     `  <meta name="twitter:card" content="summary_large_image">`,
     `  <link rel="icon" type="image/png" href="${FAVICON}">`,
     `  <link rel="stylesheet" href="/assets/css/fonts.css?v=6">`,
-    `  <link rel="stylesheet" href="/assets/css/styles.css?v=7">`,
+    `  <link rel="stylesheet" href="/assets/css/styles.css?v=8">`,
     page.leaflet ? `  <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">` : null,
-    jsonldBlock(page.jsonld || { '@type': 'WebPage' }, page.slug),
+    jsonldBlock(page.jsonld || { '@type': 'WebPage' }, page.root ? '' : page.slug),
   ].filter(Boolean).join('\n  ');
+
+  const ctaBand = page.omitCta ? '' : (page.cta || CTA);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -236,7 +328,7 @@ ${MOBILE_NAV}
 ${fragment}
 </main>
 
-${CTA}
+${ctaBand}
 
 ${FOOTER.replace('__SCRIPTS__', scriptsTag(page))}
 `;
@@ -244,7 +336,7 @@ ${FOOTER.replace('__SCRIPTS__', scriptsTag(page))}
 
 let count = 0;
 for (const page of PAGES) {
-  const outDir = join(OUT, page.slug);
+  const outDir = page.root ? OUT : join(OUT, page.slug);
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, 'index.html'), render(page), 'utf8');
   count++;
